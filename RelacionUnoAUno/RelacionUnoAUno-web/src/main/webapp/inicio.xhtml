@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+        <title>Inicio - Tabla</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="css/estilo.css" rel="stylesheet"/>
+        <f:event type="preRenderView" listener="#{bean.listaInversor()}"/>
+        <f:event type="preRenderView" listener="#{bean.listarCuentas()}"/>
+    </h:head>
+    <h:body>
+        <h:form id="formulario"> 
+            <div align="center">
+                <p:separator/>
+                <p:inputText id="ipt_nombre" requiredMessage="Campo obligatorio" value="#{bean.nombreTemporal}" placeholder="Nombre Inversor" required="true">
+                    <!--<f:validator validatorId="validacionNombre"/>-->
+                    &nbsp;&nbsp;&nbsp;
+                </p:inputText>
+                <p:inputText id="ipt_numeroCuenta" value="#{bean.numero}" placeholder="Numero" required="false">
+                    <!--<f:validator validatorId="validacionNombre"/>-->
+                    &nbsp;&nbsp;&nbsp;
+                </p:inputText>
+                <button onclick="prueba();" class="btn btn-success" jsf:actionListener="#{bean.agregarInversor()}">Agregar inversor</button>
+            </div>
+            <p:separator/>
+
+            <p:growl id="msgs" showDetail="true" autoUpdate="true"/>
+            <div class="container">
+                <!-- Tabla de inversores -->
+                <p:dataTable id="tbl" paginator="true" rows="5" widgetVar="i" var="i" value="#{bean.listaInversor}" editable="true" style="margin-bottom:20px">
+                    <p:ajax event="rowEdit" listener="#{bean.editarFilaInversor}" update="tbl" />
+                    <p:ajax event="rowEditCancel" listener="#{bean.cancelarEdicionInversor}" update="tbl" />
+
+                    <p:column headerText="Código">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{i.id}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="iptCodigo" value="#{i.id}" label="Codigo" style="width:100%" readonly="true"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Nombre">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{i.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{i.nombre}" style="width:100%" label="Nombre"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width:32px">
+                        <p:rowEditor />
+                    </p:column>
+                </p:dataTable>
+                <!-- Fin Tabla de inversores -->
+                <!-- Tabla de Cuentas -->
+                <p:dataTable id="tbl_cuenta" emptyMessage="No hay cuentas" widgetVar="c" var="c" value="#{bean.listarCuentas()}" editable="true" style="margin-bottom:20px">
+                    <p:ajax event="rowEdit" listener="#{bean.editarFilaCuenta(event)}" update="tbl_cuenta" />
+                    <p:ajax event="rowEditCancel" listener="#{bean.cancelarEdicionCuenta(event)}" update="tbl_cuenta" />
+
+                    <p:column headerText="Código">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.id}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="iptCodigo" value="#{c.id}" label="Codigo" style="width:100%" readonly="true"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Número">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.numero}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.numero}" style="width:100%" label="Número"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Titular">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{c.inversor.id}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.inversor.id}" style="width:100%" label="Titular" readonly="true"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column style="width:32px">
+                        <p:rowEditor />
+                    </p:column>
+                </p:dataTable>
+                <!-- Fin Tabla de Cuentas -->
+            </div>
+        </h:form>
+    </h:body>
+</html>
+
