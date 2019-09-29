@@ -39,5 +39,5 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
         TypedQuery<Cuenta> consulta = em.createNamedQuery("listadoCuenta", Cuenta.class);
         return consulta.getResultList();
     }
-    
+        
 }

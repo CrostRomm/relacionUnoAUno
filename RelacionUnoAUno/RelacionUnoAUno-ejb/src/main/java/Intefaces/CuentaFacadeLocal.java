@@ -6,6 +6,7 @@
 package Intefaces;
 
 import Entity.Cuenta;
+import Entity.Inversor;
 import java.util.List;
 import javax.ejb.Local;
 

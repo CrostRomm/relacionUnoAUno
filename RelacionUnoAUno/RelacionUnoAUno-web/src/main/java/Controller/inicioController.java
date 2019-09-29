@@ -28,7 +28,14 @@ public class inicioController implements Serializable{
      */
     public inicioController() {
     }
-    UIInput nombreCaja;
+    /**
+     * Instancia de inversor
+     */
+    private Inversor inversorDelete;
+    /**
+     * Instancia de Cuenta
+     */
+    private Cuenta cuentaDelete;
     /**
      * codigo temporal
      */
@@ -180,23 +187,33 @@ public class inicioController implements Serializable{
         return listaInversor;
     }
     /**
-     * Captura caja
-     * @return 
+     * Get de inversor
+     * @return Inversor
      */
-    public UIInput getNombreCaja() {
-        return nombreCaja;
+    public Inversor getInversorDelete() {
+        return inversorDelete;
     }
     /**
-     * Captura caja
-     * @param nombreCaja 
+     * Set de Inversor
+     * @param inversorDelete 
      */
-    public void setNombreCaja(UIInput nombreCaja) {
-        this.nombreCaja = nombreCaja;
+    public void setInversorDelete(Inversor inversorDelete) {
+        this.inversorDelete = inversorDelete;
     }
-    
-    
-    
-    
+    /**
+     * get de Cuenta
+     * @return Cuenta
+     */
+    public Cuenta getCuentaDelete() {
+        return cuentaDelete;
+    }
+    /**
+     * Set de cuenta
+     * @param cuentaDelete 
+     */
+    public void setCuentaDelete(Cuenta cuentaDelete) {
+        this.cuentaDelete = cuentaDelete;
+    }
     /**
      * Metodo que edita una fila 
      * @param event 
@@ -274,16 +291,26 @@ public class inicioController implements Serializable{
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String nombre = request.getParameter("formulario:ipt_nombre");
         String numer = request.getParameter("formulario:ipt_numeroCuenta");
-        Inversor inv = new Inversor();
-        inv.setNombre(nombre);
-        ejbInversor.create(inv);
-        Cuenta puenteCuenta = new Cuenta();
-        puenteCuenta.setNumero(numer);
-        puenteCuenta.setInversor(inv);
-        ejbCuenta.create(puenteCuenta);
-         int i = 0; 
-         String e = this.numero;
-         String q = nombreTemporal;
-         int o = 8;
+        if(numer.equals("")){
+            Inversor inv = new Inversor();
+            inv.setNombre(nombre);
+            ejbInversor.create(inv);
+        }else{
+            Inversor inv = new Inversor();
+            inv.setNombre(nombre);
+            ejbInversor.create(inv);
+            Cuenta puenteCuenta = new Cuenta();
+            puenteCuenta.setNumero(numer);
+            puenteCuenta.setInversor(inv);
+            ejbCuenta.create(puenteCuenta);
+        }
+    }
+    public void eliminarInversor(Inversor i){
+        ejbInversor.remove(i);
+    }
+    public void eliminarCuenta(Cuenta c){
+        int i = 0;
+        int a = 1;
+        ejbCuenta.remove(c);
     }
 }

@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
     <h:head>
-        <title>Inicio - Tabla</title>
+        <title>#{msg.titulo}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
@@ -21,70 +21,90 @@
         <h:form id="formulario"> 
             <div align="center">
                 <p:separator/>
-                <p:inputText id="ipt_nombre" requiredMessage="Campo obligatorio" value="#{bean.nombreTemporal}" placeholder="Nombre Inversor" required="true">
-                    <!--<f:validator validatorId="validacionNombre"/>-->
+                <p:inputText id="ipt_nombre" requiredMessage="Campo obligatorio" value="#{bean.nombreTemporal}" maxlength="30" placeholder="#{msg.phNombre}">
+                    <f:validator validatorId="vTexto"/>
                     &nbsp;&nbsp;&nbsp;
                 </p:inputText>
-                <p:inputText id="ipt_numeroCuenta" value="#{bean.numero}" placeholder="Numero" required="false">
-                    <!--<f:validator validatorId="validacionNombre"/>-->
+                <p:inputText id="ipt_numeroCuenta" value="#{bean.numero}" placeholder="#{msg.phNumero}" maxlength="8">
+                    <f:validator validatorId="vNumero"/>
                     &nbsp;&nbsp;&nbsp;
                 </p:inputText>
-                <button onclick="prueba();" class="btn btn-success" jsf:actionListener="#{bean.agregarInversor()}">Agregar inversor</button>
+                <button class="btn btn-success" jsf:actionListener="#{bean.agregarInversor()}">#{msg.btnAgregar}</button>
             </div>
             <p:separator/>
 
             <p:growl id="msgs" showDetail="true" autoUpdate="true"/>
             <div class="container">
                 <!-- Tabla de inversores -->
-                <p:dataTable id="tbl" paginator="true" rows="5" widgetVar="i" var="i" value="#{bean.listaInversor}" editable="true" style="margin-bottom:20px">
+                <h1>#{msg.tituloInversor}</h1>
+                <p:dataTable id="tbl" paginator="true" rows="3" widgetVar="i" var="i" value="#{bean.listaInversor}" editable="true" style="margin-bottom:20px">
                     <p:ajax event="rowEdit" listener="#{bean.editarFilaInversor}" update="tbl" />
                     <p:ajax event="rowEditCancel" listener="#{bean.cancelarEdicionInversor}" update="tbl" />
 
-                    <p:column headerText="Código">
+                    <p:column headerText="#{msg.cCodigo}">
                         <p:cellEditor>
                             <f:facet name="output"><h:outputText value="#{i.id}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="iptCodigo" value="#{i.id}" label="Codigo" style="width:100%" readonly="true"/></f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="iptCodigo" value="#{i.id}" label="#{msg.cCodigo}" style="width:100%" readonly="true"/></f:facet>
                         </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Nombre">
+                    <p:column headerText="#{msg.cNombre}">
                         <p:cellEditor>
                             <f:facet name="output"><h:outputText value="#{i.nombre}" /></f:facet>
-                            <f:facet name="input"><p:inputText value="#{i.nombre}" style="width:100%" label="Nombre"/></f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{i.nombre}" style="width:100%" label="#{msg.cNombre}" required="true" maxlength="30">
+                                    <f:validator validatorId="vTexto"/>
+                                </p:inputText>
+                            </f:facet>
                         </p:cellEditor>
                     </p:column>
 
-                    <p:column style="width:32px">
+                    <p:column style="width:10%" headerText="#{msg.cEditar}">
                         <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="#{msg.cEliminar}" width="10%">
+                        <button type="submit" class="btn btn-danger" jsf:actionListener="#{bean.eliminarInversor(i)}">
+                            X
+                        </button>                        
                     </p:column>
                 </p:dataTable>
                 <!-- Fin Tabla de inversores -->
                 <!-- Tabla de Cuentas -->
-                <p:dataTable id="tbl_cuenta" emptyMessage="No hay cuentas" widgetVar="c" var="c" value="#{bean.listarCuentas()}" editable="true" style="margin-bottom:20px">
-                    <p:ajax event="rowEdit" listener="#{bean.editarFilaCuenta(event)}" update="tbl_cuenta" />
-                    <p:ajax event="rowEditCancel" listener="#{bean.cancelarEdicionCuenta(event)}" update="tbl_cuenta" />
+                <p:dataTable id="tbl_cuenta" paginator="true" rows="3" emptyMessage="No hay cuentas" widgetVar="c" var="c" value="#{bean.listarCuentas()}" editable="true" style="margin-bottom:20px">
+                    <p:ajax event="rowEdit" listener="#{bean.editarFilaCuenta}" update="tbl_cuenta" />
+                    <p:ajax event="rowEditCancel" listener="#{bean.cancelarEdicionCuenta}" update="tbl_cuenta" />
 
-                    <p:column headerText="Código">
+                    <p:column headerText="#{msg.cCodigo}">
                         <p:cellEditor>
                             <f:facet name="output"><h:outputText value="#{c.id}" /></f:facet>
                             <f:facet name="input"><p:inputText id="iptCodigo" value="#{c.id}" label="Codigo" style="width:100%" readonly="true"/></f:facet>
                         </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Número">
+                    <p:column headerText="#{msg.phNumero}">
                         <p:cellEditor>
                             <f:facet name="output"><h:outputText value="#{c.numero}" /></f:facet>
-                            <f:facet name="input"><p:inputText value="#{c.numero}" style="width:100%" label="Número"/></f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{c.numero}" style="width:100%" label="#{msg.phNumero}" maxlength="8" required="true">
+                                    <f:validator validatorId="vNumero"/>
+                                </p:inputText>
+                            </f:facet>
                         </p:cellEditor>
                     </p:column>
-                    <p:column headerText="Titular">
+                    <p:column headerText="#{msg.cTitular}">
                         <p:cellEditor>
                             <f:facet name="output"><h:outputText value="#{c.inversor.id}" /></f:facet>
-                            <f:facet name="input"><p:inputText value="#{c.inversor.id}" style="width:100%" label="Titular" readonly="true"/></f:facet>
+                            <f:facet name="input"><p:inputText value="#{c.inversor.id}" style="width:100%" label="#{msg.cTitular}" readonly="true"/></f:facet>
                         </p:cellEditor>
                     </p:column>
-                    <p:column style="width:32px">
+                    <p:column style="width:10%" headerText="#{msg.cEditar}">
                         <p:rowEditor />
+                    </p:column>
+                    <p:column headerText="#{msg.cEliminar}" width="10%">
+                        <button type="submit" class="btn btn-danger" jsf:actionListener="#{bean.eliminarCuenta(c)}">
+                            X
+                        </button>                        
                     </p:column>
                 </p:dataTable>
                 <!-- Fin Tabla de Cuentas -->
